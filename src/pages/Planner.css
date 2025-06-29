@@ -1,0 +1,48 @@
+.planner-container {
+  display: flex;
+  height: 100vh;
+}
+
+.planner-form-section {
+  width: 30%;
+  background-color: #111;
+  color: white;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+.planner-form label {
+  margin-top: 15px;
+  display: block;
+  font-weight: bold;
+}
+
+.planner-form input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: none;
+}
+
+.planner-form button {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #29a329;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.trip-summary {
+  margin-top: 20px;
+  background-color: #222;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.planner-map-section {
+  width: 70%;
+  height: 100vh;
+}
