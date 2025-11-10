@@ -1,94 +1,128 @@
 import React, { useState } from 'react';
-import './Planner.css';
 
-function Planner() {
-  const [formData, setFormData] = useState({
-    destination: '',
-    startDate: '',
-    endDate: '',
-    budget: '',
-  });
-
-  const [summary, setSummary] = useState(null);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+const MapRouteViewer = () => {
+  const [source, setSource] = useState('');
+  const [destination, setDestination] = useState('');
+  const [mapUrl, setMapUrl] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!source || !destination) return;
 
-    const { destination, startDate, endDate, budget } = formData;
-
-    if (!destination || !startDate || !endDate || !budget) {
-      alert('Please fill in all fields.');
-      return;
-    }
-
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-
-    if (end <= start) {
-      alert('End date must be after start date.');
-      return;
-    }
-
-    const duration = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
-    const costPerDay = (budget / duration).toFixed(2);
-
-    setSummary({
-      ...formData,
-      duration,
-      costPerDay,
-    });
+    const url = `https://maps.google.com/maps?q=${encodeURIComponent(source)}+to+${encodeURIComponent(
+      destination
+    )}&output=embed`;
+    setMapUrl(url);
   };
 
   return (
-    <div className="planner-container">
-      <div className="planner-form-section">
-        <form className="planner-form" onSubmit={handleSubmit}>
-          <h2>Trip Planner</h2>
+    <div style={{ height: '100vh', width: '100vw', display: 'flex', fontFamily: 'Arial, sans-serif' }}>
+      
+      {/* Left: Form Area (30%) */}
+      <div
+        style={{
+          width: '30%',
+          padding: '30px 20px',
+          background: '#000',
+          color: '#fff',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          boxShadow: '2px 0 10px rgba(0, 0, 0, 0.5)'
+        }}
+      >
+        <div
+          style={{
+            background: '#111',
+            borderRadius: '12px',
+            padding: '30px 25px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+          }}
+        >
+          <h2 style={{ textAlign: 'center', marginBottom: '25px', fontWeight: 'bold', fontSize: '24px' }}>
+            🚗 Route Finder
+          </h2>
 
-          <label>Destination:</label>
-          <input type="text" name="destination" value={formData.destination} onChange={handleChange} required />
-
-          <label>Start Date:</label>
-          <input type="date" name="startDate" value={formData.startDate} onChange={handleChange} required />
-
-          <label>End Date:</label>
-          <input type="date" name="endDate" value={formData.endDate} onChange={handleChange} required />
-
-          <label>Budget (₹):</label>
-          <input type="number" name="budget" value={formData.budget} onChange={handleChange} required />
-
-          <button type="submit">Submit Plan</button>
-
-          {summary && (
-            <div className="trip-summary">
-              <h3>Trip Summary:</h3>
-              <p><strong>Destination:</strong> {summary.destination}</p>
-              <p><strong>Duration:</strong> {summary.duration} days</p>
-              <p><strong>Budget:</strong> ₹{summary.budget}</p>
-              <p><strong>Cost per Day:</strong> ₹{summary.costPerDay}</p>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div>
+              <label style={{ fontWeight: 'bold', marginBottom: '6px', display: 'block' }}>Source</label>
+              <input
+                type="text"
+                placeholder="Enter starting point"
+                value={source}
+                onChange={(e) => setSource(e.target.value)}
+                required
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid #444',
+                  backgroundColor: '#222',
+                  color: '#fff',
+                  fontSize: '16px'
+                }}
+              />
             </div>
-          )}
-        </form>
+
+            <div>
+              <label style={{ fontWeight: 'bold', marginBottom: '6px', display: 'block' }}>Destination</label>
+              <input
+                type="text"
+                placeholder="Enter destination"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+                required
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid #444',
+                  backgroundColor: '#222',
+                  color: '#fff',
+                  fontSize: '16px'
+                }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              style={{
+                padding: '14px',
+                backgroundColor: '#1e90ff',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                fontWeight: 'bold',
+                fontSize: '16px',
+                cursor: 'pointer',
+                transition: 'background 0.3s'
+              }}
+              onMouseOver={(e) => (e.target.style.backgroundColor = '#0d6efd')}
+              onMouseOut={(e) => (e.target.style.backgroundColor = '#1e90ff')}
+            >
+              Show Route
+            </button>
+          </form>
+        </div>
       </div>
 
-      <div className="planner-map-section">
-        <iframe
-          title="Map"
-          width="100%"
-          height="100%"
-          style={{ border: 0 }}
-          loading="lazy"
-          allowFullScreen
-          src={`https://www.openstreetmap.org/export/embed.html?bbox=76.8,28.4,77.6,28.9&layer=mapnik&marker=28.6139,77.2090`}
-        ></iframe>
+      {/* Right: Map Area (70%) */}
+      <div style={{ width: '70%', height: '100%' }}>
+        {mapUrl && (
+          <iframe
+            title="Route Map"
+            src={mapUrl}
+            width="100%"
+            height="100%"
+            frameBorder="0"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+          />
+        )}
       </div>
     </div>
   );
-}
+};
 
-export default Planner;
+export default MapRouteViewer;

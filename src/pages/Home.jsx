@@ -142,7 +142,6 @@ const TravelPlannerSlider = () => {
             <ion-icon
               name="map-outline"
               onClick={() => navigate("/GoogleMapComponent")}
-              style={{ cursor: "pointer" }}
             ></ion-icon>
           </div>
 
